@@ -2,18 +2,18 @@
  * Copyright (c) 2016. Ted Park. All Rights Reserved
  */
 
-apply plugin: 'com.android.application'
+apply plugin: 'com.android.library'
+apply plugin: 'com.github.dcendents.android-maven'
+group = 'com.loyalsound'
 
 android {
     compileSdkVersion 23
     buildToolsVersion "23.0.2"
 
     defaultConfig {
-        applicationId "com.ls.sip.sample"
         minSdkVersion 15
         targetSdkVersion 23
-        versionCode 1
-        versionName "1.0"
+
     }
     buildTypes {
         release {
@@ -24,27 +24,17 @@ android {
 }
 
 
+
 repositories {
-
     maven { url "https://repo.commonsware.com.s3.amazonaws.com" }
-
-    maven {
-        url "https://s3.amazonaws.com/repo.commonsware.com"
-    }
-
-
-
 }
 
-
-
-
 dependencies {
-    compile project(':library')
     compile fileTree(dir: 'libs', include: ['*.jar'])
 
     compile 'com.android.support:appcompat-v7:23.1.1'
+    compile 'com.android.support:design:23.1.1'
 
-
-
+    compile 'com.github.bumptech.glide:glide:3.6.1'
+    compile 'com.commonsware.cwac:camera:0.6.12'
 }
