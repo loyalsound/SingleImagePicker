@@ -1,7 +1,3 @@
-/*
- * Copyright (c) 2016. Ted Park. All Rights Reserved
- */
-
 package com.ls.sip.sample;
 
 import android.app.Activity;
@@ -26,8 +22,7 @@ public class MainActivity extends AppCompatActivity {
 
     private static final int INTENT_REQUEST_GET_IMAGES = 13;
 
-    private static final String TAG = "TedPicker";
-    ArrayList<Uri> image_uris = new ArrayList<Uri>();
+    ArrayList<Uri> image_uris = new ArrayList<>();
     private ViewGroup mSelectedImagesContainer;
 
     @Override
@@ -43,7 +38,7 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void onClick(View v) {
-                getImages(new Config());
+                getImages();
             }
         });
 
@@ -56,30 +51,23 @@ public class MainActivity extends AppCompatActivity {
 
                 Config config = new Config();
                 config.setCameraHeight(R.dimen.app_camera_height);
-                config.setToolbarTitleRes(R.string.custom_title);
-                config.setSelectionMin(2);
-                config.setSelectionLimit(4);
                 config.setSelectedBottomHeight(R.dimen.bottom_height);
                 config.setFlashOn(true);
 
 
-                getImages(config);
+                getImages();
             }
         });
 
-
     }
 
-    private void getImages(Config config) {
-
-
-        ImagePickerActivity.setConfig(config);
+    private void getImages() {
 
         Intent intent = new Intent(this, ImagePickerActivity.class);
 
-        if (image_uris != null) {
-            intent.putParcelableArrayListExtra(ImagePickerActivity.EXTRA_IMAGE_URIS, image_uris);
-        }
+//        if (image_uris != null) {
+//            intent.putParcelableArrayListExtra(ImagePickerActivity.EXTRA_IMAGE_URIS, image_uris);
+//        }
 
 
         startActivityForResult(intent, INTENT_REQUEST_GET_IMAGES);
@@ -94,14 +82,11 @@ public class MainActivity extends AppCompatActivity {
 
         if (resuleCode == Activity.RESULT_OK) {
             if (requestCode == INTENT_REQUEST_GET_IMAGES) {
-
-                image_uris = intent.getParcelableArrayListExtra(ImagePickerActivity.EXTRA_IMAGE_URIS);
+//                image_uris = intent.getParcelableArrayListExtra(ImagePickerActivity.EXTRA_IMAGE_URIS);
 
                 if (image_uris != null) {
                     showMedia();
                 }
-
-
             }
         }
     }
@@ -132,8 +117,6 @@ public class MainActivity extends AppCompatActivity {
             mSelectedImagesContainer.addView(imageHolder);
 
             thumbnail.setLayoutParams(new FrameLayout.LayoutParams(wdpx, htpx));
-
-
         }
 
     }

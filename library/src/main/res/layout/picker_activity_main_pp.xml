@@ -1,134 +1,44 @@
-<!--
-  ~ Copyright (c) 2016. Ted Park. All Rights Reserved
-  -->
-
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                xmlns:app="http://schemas.android.com/apk/res-auto"
-                android:layout_width="match_parent"
-
-                android:layout_height="match_parent"
-
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#26272b"
+    android:orientation="vertical"
     >
-
 
     <android.support.v7.widget.Toolbar
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="?attr/colorPrimary"
-        android:minHeight="?attr/actionBarSize"
+        android:layout_height="?attr/actionBarSize"
+        android:background="@android:color/transparent"
         app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
         app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+        >
 
-
-        />
-
-    <RelativeLayout
-        android:id="@+id/view_root"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/toolbar"
-        android:background="#fff">
-
-
-        <!--android:layout_height="@dimen/tab_height"-->
-
-
-        <android.support.design.widget.TabLayout
-            android:id="@+id/tab_layout"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="bottom"
-            android:background="#fff"
-
-            android:minHeight="?attr/actionBarSize"
-
-
-            app:tabGravity="fill"
-            app:tabIndicatorColor="?attr/colorPrimary"
-            app:tabIndicatorHeight="5dp"
-            app:tabMaxWidth="0dp"
-            app:tabMode="fixed"
-            app:tabSelectedTextColor="?attr/colorPrimary"
-            app:tabTextAppearance="@style/CustomText_Body"
-            app:tabTextColor="@color/custom_txt_whitegray"
-
-
-            />
-
-        <android.support.v4.view.ViewPager
-            android:id="@+id/pager"
+        <TextView
+            android:id="@+id/title_text_view"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_above="@+id/action_btn_contianer"
-            android:layout_below="@+id/tab_layout"/>
+            android:gravity="center"
+            android:textColor="#FFF"
+            />
 
-        <LinearLayout
-            android:id="@+id/action_btn_contianer"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
+    </android.support.v7.widget.Toolbar>
 
-            android:divider="?android:dividerHorizontal"
+    <android.support.v4.view.ViewPager
+        android:id="@+id/view_pager"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        />
 
-            android:orientation="vertical"
-            android:showDividers="middle">
+    <android.support.design.widget.TabLayout
+        android:id="@+id/tabs_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        style="?attr/sipTabStyle"
+        />
 
-            <TextView
-
-                android:id="@+id/tv_selected_title"
-                android:layout_width="match_parent"
-                android:layout_height="fill_parent"
-                android:background="?attr/colorAccent"
-                android:gravity="center"
-
-                android:padding="5dp"
-                android:text="@string/selected_image"
-                android:textColor="#fff"
-                android:textSize="16sp"
-                android:textStyle="bold"/>
-
-
-            <FrameLayout
-                android:id="@+id/view_selected_photos_container"
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/ted_picker_selected_image_height"
-                android:layout_alignParentBottom="true"
-
-                >
-
-                <HorizontalScrollView
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-
-                    android:fillViewport="false"
-
-                    android:foregroundGravity="left">
-
-                    <LinearLayout
-                        android:id="@+id/selected_photos_container"
-                        android:layout_width="wrap_content"
-                        android:layout_height="match_parent"
-                        android:layout_gravity="left"
-                        android:animateLayoutChanges="true"
-                        android:gravity="left"
-                        android:orientation="horizontal"
-                        android:visibility="gone"/>
-                </HorizontalScrollView>
-
-                <TextView
-                    android:id="@+id/selected_photos_empty"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:text="@string/no_image"
-                    android:textAppearance="?android:attr/textAppearanceSmall"
-                    android:textColor="?attr/colorAccent"/>
-            </FrameLayout>
-
-
-        </LinearLayout>
-
-    </RelativeLayout>
-
-</RelativeLayout>
+</LinearLayout>

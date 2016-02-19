@@ -11,8 +11,8 @@
     <string name="done">완료</string>
 
     <string-array name="tab_titles">
-        <item>카메라</item>
         <item>갤러리</item>
+        <item>카메라</item>
     </string-array>
 
 

@@ -1,23 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!--
-  ~ Copyright (c) 2016. Ted Park. All Rights Reserved
-  -->
-
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/root_container"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#000"
-
+    android:background="#26272b"
     >
 
-
-    <!--android:layout_height="@dimen/post_detail_picture_viewpager"-->
-
-
     <RelativeLayout
-        android:layout_width="fill_parent"
+        android:id="@+id/camera_container"
+        android:layout_width="match_parent"
         android:layout_height="@dimen/ted_picker_camera_height"
-        android:layout_centerInParent="true">
+        >
 
         <com.commonsware.cwac.camera.CameraView
             android:id="@+id/cameraView"
@@ -29,16 +22,9 @@
             android:id="@+id/drawingView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-
             />
 
-
     </RelativeLayout>
-
-
-    <!--android:layout_centerInParent="true"-->
-
-    <!--android:layout_height="@dimen/post_detail_picture_viewpager"-->
 
     <View
         android:id="@+id/vShutter"
@@ -47,18 +33,24 @@
         android:background="#ffffff"
         android:visibility="gone" />
 
-    <ImageButton
-        android:id="@+id/btn_take_picture"
-        android:layout_width="@dimen/ted_picker_fab_size"
-        android:layout_height="@dimen/ted_picker_fab_size"
+    <LinearLayout
+        android:id="@+id/button_container"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
+        android:gravity="center">
 
-        android:layout_centerHorizontal="true"
-        android:layout_margin="10dp"
-        android:background="@drawable/btn_bg"
-        android:padding="15dp"
-        android:scaleType="fitCenter"
-        android:src="@drawable/ic_camera" />
+        <ImageButton
+            android:id="@+id/btn_take_picture"
+            android:layout_width="@dimen/ted_picker_fab_size"
+            android:layout_height="@dimen/ted_picker_fab_size"
+            android:contentDescription="@null"
+            android:layout_margin="10dp"
+            android:background="@drawable/sip_btn_bg"
+            android:padding="15dp"
+            android:scaleType="fitCenter"
+            android:src="@drawable/sip_ic_camera" />
 
+    </LinearLayout>
 
 </RelativeLayout>

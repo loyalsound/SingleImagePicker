@@ -16,7 +16,16 @@
 
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
+        <item name="sipTabStyle">@style/MySipTabStyle</item>
+    </style>
 
+    <style name="MySipTabStyle" parent="SimpleImagePicker.TabStyle">
+        <item name="tabIndicatorColor">#FFFFFF</item>
+        <item name="tabIndicatorHeight">10dp</item>
+        <item name="tabSelectedTextColor">#FF00FF</item>
+        <item name="tabTextAppearance">@style/CustomText_Body</item>
+        <item name="tabTextColor">@color/custom_txt_whitegray</item>
+        <item name="android:background">#FFF000</item>
     </style>
 
 </resources>

@@ -17,7 +17,8 @@ import com.ls.sip.util.Util;
 
 
 /**
- * Created by TedPark on 15. 6. 29..
+ * @author TedPark
+ * @since 29/06/2015
  */
 public class DrawingView extends View {
     private boolean haveTouch = false;
@@ -27,14 +28,14 @@ public class DrawingView extends View {
     public DrawingView(Context context, AttributeSet attrs) {
         super(context, attrs);
 
-        final TypedValue value = new TypedValue ();
-        context.getTheme ().resolveAttribute (R.attr.colorPrimary, value, true);
+        final TypedValue value = new TypedValue();
+        context.getTheme().resolveAttribute(R.attr.colorPrimary, value, true);
         int primary_color = value.data;
 
         paint = new Paint();
         paint.setColor(primary_color);
         paint.setStyle(Paint.Style.STROKE);
-        paint.setStrokeWidth(Util.dpToPx(context,2));
+        paint.setStrokeWidth(Util.dpToPx(context, 2));
         haveTouch = false;
     }
 
@@ -45,7 +46,7 @@ public class DrawingView extends View {
 
     @Override
     public void onDraw(Canvas canvas) {
-        if(haveTouch){
+        if (haveTouch) {
             canvas.drawRect(
                     touchArea.left, touchArea.top, touchArea.right, touchArea.bottom,
                     paint);

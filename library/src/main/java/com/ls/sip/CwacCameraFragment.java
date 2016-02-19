@@ -26,7 +26,6 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
-import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -55,36 +54,45 @@ import java.util.Comparator;
 import java.util.List;
 
 
+@SuppressWarnings("deprecation")
 public class CwacCameraFragment extends Fragment implements View.OnClickListener {
 
-    static final int FOCUS_AREA_WEIGHT = 1000;
-    private static final Interpolator ACCELERATE_INTERPOLATOR = new AccelerateInterpolator();
-    private static final Interpolator DECELERATE_INTERPOLATOR = new DecelerateInterpolator();
-    public static float camera_width;
-    public static float camera_height;
+    private static final String EXTRA_CONFIG = "EXTRA_CONFIG";
+    private static final int FOCUS_AREA_WEIGHT = 1000;
 
-    private static Config mConfig;
-    View view;
-    ImageButton btn_take_picture;
-    View vShutter;
-    CameraView cameraView;
-    DrawingView drawingView;
-    List<Camera.Area> focusList;
+    public static CwacCameraFragment createInstance(Config config) {
+        CwacCameraFragment fragment = new CwacCameraFragment();
+        if (config != null) {
+            Bundle args = new Bundle();
+            args.putParcelable(EXTRA_CONFIG, config);
+            fragment.setArguments(args);
+        }
+        return fragment;
+    }
+
+    private Config mConfig;
+    private View view;
+    private ImageButton btn_take_picture;
+    private View vShutter;
+    private CameraView cameraView;
+    private DrawingView drawingView;
+    private List<Camera.Area> focusList;
 
     private ProgressDialog mProgressDialog;
 
-    /**
-     * @param config
-     */
-    public static void setConfig(@Nullable Config config) {
-        mConfig = config;
-    }
+    private Interpolator ACCELERATE_INTERPOLATOR = new AccelerateInterpolator();
+    private Interpolator DECELERATE_INTERPOLATOR = new DecelerateInterpolator();
+
+    private float camera_width;
+    private float camera_height;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        ImagePickerActivity.mMyCameraHost = new MyCameraHost(getActivity());
 
+        mConfig = getArguments().getParcelable(EXTRA_CONFIG);
+
+        ImagePickerActivity.mMyCameraHost = new MyCameraHost(getActivity());
 
         mProgressDialog = new ProgressDialog(getActivity());
         mProgressDialog.setMessage(getString(R.string.progress_title));
@@ -108,17 +116,14 @@ public class CwacCameraFragment extends Fragment implements View.OnClickListener
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
-        view = inflater.inflate(R.layout.picker_fragment_camera_cwac, null, false);
+        view = inflater.inflate(R.layout.picker_fragment_camera_cwac, container, false);
 
         initView();
 
+        ViewGroup.LayoutParams params = cameraView.getLayoutParams();
+        params.height = (int) getResources().getDimension(mConfig.getCameraHeight());
 
-        ViewGroup.LayoutParams params=cameraView.getLayoutParams();
-         params.height= (int) getResources().getDimension(mConfig.getCameraHeight());
-
-        Log.d("ted","params.height: "+params.height);
         cameraView.setLayoutParams(params);
-
 
         // 카메라뷰의 크기와 위치를 가져온다
         // get CameraView's widht/height
@@ -190,19 +195,14 @@ public class CwacCameraFragment extends Fragment implements View.OnClickListener
                 float y = event.values[1];
 
 
-
-
-                if (x<5 && x>-5 && y > 5)
+                if (x < 5 && x > -5 && y > 5)
                     device_orientation = 0;
-                else if (x<-5 && y<5 && y>-5)
+                else if (x < -5 && y < 5 && y > -5)
                     device_orientation = 90;
-                else if (x<5 && x>-5 && y<-5)
+                else if (x < 5 && x > -5 && y < -5)
                     device_orientation = 180;
-                else if (x>5 && y<5 && y>-5)
+                else if (x > 5 && y < 5 && y > -5)
                     device_orientation = 270;
-
-
-
 
             }
 
@@ -303,7 +303,7 @@ public class CwacCameraFragment extends Fragment implements View.OnClickListener
         try {
 
             // Area 리스트에 넣고 포커스를 잡는다
-            focusList = new ArrayList<Camera.Area>();
+            focusList = new ArrayList<>();
             Camera.Area focusArea = new Camera.Area(tfocusRect, FOCUS_AREA_WEIGHT);
             focusList.add(focusArea);
 
@@ -325,7 +325,7 @@ public class CwacCameraFragment extends Fragment implements View.OnClickListener
     }
 
     private void takePicture() {
-        Log.d("gun0912","takePicture()");
+        Log.d("gun0912", "takePicture()");
 
         try {
             cameraView.takePicture(false, true);
@@ -341,9 +341,8 @@ public class CwacCameraFragment extends Fragment implements View.OnClickListener
     }
 
 
-
     public void onTakePicture(View view) {
-        Log.d("gun0912","onTakePicture()");
+        Log.d("gun0912", "onTakePicture()");
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN
                 && focusList == null
                 ) {
@@ -384,7 +383,7 @@ public class CwacCameraFragment extends Fragment implements View.OnClickListener
 
         ImagePickerActivity mImagePickerActivity = ((ImagePickerActivity) getActivity());
 
-        mImagePickerActivity.addImage(uri);
+        // TODO: mImagePickerActivity.addImage(uri);
 
         GalleryFragment mGalleryFragment = mImagePickerActivity.getGalleryFragment();
 
@@ -436,8 +435,7 @@ public class CwacCameraFragment extends Fragment implements View.OnClickListener
         protected File getPhotoDirectory() {
 
 
-
-            return new File(Environment.getExternalStorageDirectory() + "/"+getResources().getString(mConfig.getSavedDirectoryName())+"/");
+            return new File(Environment.getExternalStorageDirectory() + "/" + getResources().getString(mConfig.getSavedDirectoryName()) + "/");
         }
 
         @Override
@@ -446,13 +444,10 @@ public class CwacCameraFragment extends Fragment implements View.OnClickListener
         }
 
 
-
-
-
         // 미리보기 화면에서 사진 크기 해상도를 미리 가져온다
         @Override
         public Camera.Parameters adjustPreviewParameters(Camera.Parameters parameters) {
-        Log.d("gun0912","adjustPreviewParameters()");
+            Log.d("gun0912", "adjustPreviewParameters()");
 
             bestPictureSize = getBestPictureSize(parameters);
             return super.adjustPreviewParameters(parameters);
@@ -472,15 +467,14 @@ public class CwacCameraFragment extends Fragment implements View.OnClickListener
         }
 
         private Camera.Size getBestPictureSize(Camera.Parameters parameters) {
-            Log.d("gun0912","getBestPictureSize()");
+            Log.d("gun0912", "getBestPictureSize()");
 
             Camera.Size result;
-            Log.d("gun0912","camera_width: "+camera_width);
+            Log.d("gun0912", "camera_width: " + camera_width);
 
             if (camera_width == 0) {
                 return CameraUtils.getLargestPictureSize(this, parameters, false);
             }
-
 
 
             List<Camera.Size> sizes = parameters.getSupportedPictureSizes();
@@ -500,66 +494,51 @@ public class CwacCameraFragment extends Fragment implements View.OnClickListener
 
 
             }
-            Log.i("gun0912","result: "+result.height+"x"+result.width);
+            Log.i("gun0912", "result: " + result.height + "x" + result.width);
 
             return result;
 
         }
 
 
-
-
         private Bitmap getCorrectOrientImage(Bitmap bitmap) {
 
 
-
-                    bitmap = Util.rotate(bitmap, device_orientation);
-
+            bitmap = Util.rotate(bitmap, device_orientation);
 
 
             return bitmap;
 
 
         }
+
         private Bitmap getCorrectOrientImage(Bitmap bitmap, String path) {
-
-
-            ExifInterface exif = null;
             try {
 
-                exif = new ExifInterface(path);
+                ExifInterface exif = new ExifInterface(path);
 
+                int exifOrientation = exif.getAttributeInt(ExifInterface.TAG_ORIENTATION, ExifInterface.ORIENTATION_NORMAL);
+                int exifDegree = Util.exifOrientationToDegrees(exifOrientation);
 
-                if (exif != null) {
-                    int exifOrientation = exif.getAttributeInt(
-                            ExifInterface.TAG_ORIENTATION, ExifInterface.ORIENTATION_NORMAL);
-                    Log.d("gun0912","exifOrientation: "+exifOrientation);
-                    int exifDegree = Util.exifOrientationToDegrees(exifOrientation);
-                    Log.d("gun0912","exifDegree: "+exifDegree);
-                    bitmap = Util.rotate(bitmap, exifDegree);
-
-                }
+                bitmap = Util.rotate(bitmap, exifDegree);
 
             } catch (Exception e) {
                 e.printStackTrace();
             }
 
             return bitmap;
-
-
         }
 
 
         @Override
         public Camera.Parameters adjustPictureParameters(PictureTransaction xact, Camera.Parameters parameters) {
 
-            if(mConfig.isFlashOn()){
+            if (mConfig.isFlashOn()) {
                 parameters.setFlashMode(Camera.Parameters.FLASH_MODE_ON);
             }
 
             return super.adjustPictureParameters(xact, parameters);
         }
-
 
 
         @Override
@@ -580,7 +559,7 @@ public class CwacCameraFragment extends Fragment implements View.OnClickListener
                 // 회전값을 보정한다
                 bitmap = Util.rotate(bitmap, device_orientation);
                 //bitmap = getCorrectOrientImage(bitmap, photo.toString());
-               // bitmap = getCorrectOrientImage(bitmap, photo.toString());
+                // bitmap = getCorrectOrientImage(bitmap, photo.toString());
 
                 float ratio = camera_height / camera_width;
 
@@ -625,20 +604,16 @@ public class CwacCameraFragment extends Fragment implements View.OnClickListener
         }
 
 
-
         @Override
         public void onAutoFocus(boolean success, Camera camera) {
-            Log.d("gun0912","onAutoFocus()");
-
-
-
+            Log.d("gun0912", "onAutoFocus()");
 
 
             try {
 
                 // 터치해서 포커스 잡는 경우
                 if (focusList != null) {
-                    Log.d("gun0912","터치해서 포커스 잡는 경우");
+                    Log.d("gun0912", "터치해서 포커스 잡는 경우");
                     Camera.Parameters param = camera.getParameters();
 
                     int maxNumFocusAreas = param.getMaxNumFocusAreas();
@@ -652,7 +627,7 @@ public class CwacCameraFragment extends Fragment implements View.OnClickListener
                 }
                 // 아무터치하지않고 그냥 바로 촬영버튼 누른경우
                 else {
-                    Log.d("gun0912","아무터치하지않고 그냥 바로 촬영버튼 누른경우");
+                    Log.d("gun0912", "아무터치하지않고 그냥 바로 촬영버튼 누른경우");
                     //  super.onAutoFocus(success, camera);
                     takePicture();
                 }
@@ -662,7 +637,6 @@ public class CwacCameraFragment extends Fragment implements View.OnClickListener
                 e.printStackTrace();
 
             }
-
 
 
         }
@@ -687,7 +661,6 @@ public class CwacCameraFragment extends Fragment implements View.OnClickListener
         }
 
     }
-
 
 
 }

@@ -1,9 +1,7 @@
-/*
- * Copyright (c) 2016. Ted Park. All Rights Reserved
- */
-
 package com.ls.sip;
 
+import android.os.Parcel;
+import android.os.Parcelable;
 import android.support.annotation.ColorRes;
 import android.support.annotation.DimenRes;
 import android.support.annotation.DrawableRes;
@@ -11,32 +9,82 @@ import android.support.annotation.StringRes;
 
 /**
  * @author jay
+ * @author 9you
  * @since 3/5/15
  */
-public class Config {
+public class Config implements Parcelable {
 
-    private int toolbarTitleRes = R.string.toolbar_title;
+    public static final Creator<Config> CREATOR = new Creator<Config>() {
+        public Config createFromParcel(Parcel in) {
+            return new Config(in);
+        }
+
+        public Config[] newArray(int size) {
+            return new Config[size];
+        }
+    };
 
     private int tabBackgroundColor;
     private int tabSelectionIndicatorColor;
 
     private int selectedBottomColor;
 
-    private int selectionLimit = Integer.MAX_VALUE;
-    private int selectionMin = 0;
-
     private int cameraHeight = R.dimen.ted_picker_camera_height;
 
-    private int cameraBtnImage = R.drawable.ic_camera;
-    private int cameraBtnBackground = R.drawable.btn_bg;
+    private int cameraBtnImage = R.drawable.sip_ic_camera;
+    private int cameraBtnBackground = R.drawable.sip_btn_bg;
 
     private int selectedCloseImage = R.drawable.abc_ic_clear_mtrl_alpha;
     private int selectedBottomHeight = R.dimen.ted_picker_selected_image_height;
 
     private int savedDirectoryName = R.string.default_directory;
 
-
     private boolean flashOn = false;
+
+    public Config() {
+        super();
+    }
+
+    public Config(Parcel in) {
+        super();
+        this.tabBackgroundColor = in.readInt();
+        this.tabSelectionIndicatorColor = in.readInt();
+
+        this.selectedBottomColor = in.readInt();
+
+        this.cameraHeight = in.readInt();
+
+        this.cameraBtnImage = in.readInt();
+        this.cameraBtnBackground = in.readInt();
+
+        this.selectedCloseImage = in.readInt();
+        this.selectedBottomHeight = in.readInt();
+
+        this.savedDirectoryName = in.readInt();
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeInt(this.tabBackgroundColor);
+        dest.writeInt(this.tabSelectionIndicatorColor);
+
+        dest.writeInt(this.selectedBottomColor);
+
+        dest.writeInt(this.cameraHeight);
+
+        dest.writeInt(this.cameraBtnImage);
+        dest.writeInt(this.cameraBtnBackground);
+
+        dest.writeInt(this.selectedCloseImage);
+        dest.writeInt(this.selectedBottomHeight);
+
+        dest.writeInt(this.savedDirectoryName);
+    }
 
     public int getCameraHeight() {
         return cameraHeight;
@@ -82,18 +130,6 @@ public class Config {
         this.selectedBottomColor = colorRes;
     }
 
-    public int getToolbarTitleRes() {
-        return toolbarTitleRes;
-    }
-
-    public void setToolbarTitleRes(@StringRes int toolbarTitleRes) {
-        if (toolbarTitleRes <= 0)
-            throw new IllegalArgumentException("Invalid value for toolbarTitleRes");
-
-        this.toolbarTitleRes = toolbarTitleRes;
-    }
-
-
     public int getTabBackgroundColor() {
         return tabBackgroundColor;
     }
@@ -107,7 +143,6 @@ public class Config {
 
     }
 
-
     public int getTabSelectionIndicatorColor() {
         return tabSelectionIndicatorColor;
     }
@@ -116,44 +151,21 @@ public class Config {
      * Sets selected tab indicator color.
      */
     public void setTabSelectionIndicatorColor(@ColorRes int colorRes) {
-        if (colorRes <= 0) throw new IllegalArgumentException("Invalid value for tabSelectionIndicatorColor");
-
+        if (colorRes <= 0) {
+            throw new IllegalArgumentException("Invalid value for tabSelectionIndicatorColor");
+        }
 
         this.tabSelectionIndicatorColor = colorRes;
-
     }
-
-    public int getSelectionLimit() {
-        return selectionLimit;
-    }
-
-    /**
-     * Limit the number of images that can be selected. By default the user can
-     * select infinite number of images.
-     *
-     * @param selectionLimit
-     */
-    public void setSelectionLimit(int selectionLimit) {
-        this.selectionLimit = selectionLimit;
-
-    }
-
-    public int getSelectionMin() {
-        return selectionMin;
-    }
-
-    public void setSelectionMin(int selectionmin) {
-        selectionMin = selectionmin;
-
-    }
-
 
     public int getCameraBtnImage() {
         return cameraBtnImage;
     }
 
     public void setCameraBtnImage(@DrawableRes int drawableRes) {
-        if (drawableRes <= 0) throw new IllegalArgumentException("Invalid value for cameraBtnImage");
+        if (drawableRes <= 0) {
+            throw new IllegalArgumentException("Invalid value for cameraBtnImage");
+        }
         this.cameraBtnImage = drawableRes;
     }
 
@@ -162,21 +174,22 @@ public class Config {
     }
 
     public void setCameraBtnBackground(@DrawableRes int drawableRes) {
-        if (drawableRes <= 0) throw new IllegalArgumentException("Invalid value for cameraBtnBackground");
+        if (drawableRes <= 0) {
+            throw new IllegalArgumentException("Invalid value for cameraBtnBackground");
+        }
         this.cameraBtnBackground = drawableRes;
     }
-
 
     public int getSelectedCloseImage() {
         return selectedCloseImage;
     }
 
     public void setSelectedCloseImage(@DrawableRes int drawableRes) {
-        if (drawableRes <= 0) throw new IllegalArgumentException("Invalid value for selectedCloseImage");
-
+        if (drawableRes <= 0) {
+            throw new IllegalArgumentException("Invalid value for selectedCloseImage");
+        }
         this.selectedCloseImage = drawableRes;
     }
-
 
     public boolean isFlashOn(){
         return flashOn;

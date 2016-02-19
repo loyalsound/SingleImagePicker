@@ -25,3 +25,9 @@ proguard/
 
 # Log Files
 *.log
+.idea/workspace.xml
+.idea/inspectionProfiles/profiles_settings.xml
+.idea/inspectionProfiles/Project_Default.xml
+.idea/libraries/cam2_0_5_0.xml
+.idea/libraries/eventbus_2_4_0.xml
+.idea/libraries/fab_1_6_1.xml

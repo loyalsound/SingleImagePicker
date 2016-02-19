@@ -54,6 +54,7 @@ public class GalleryFragment extends Fragment {
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
 
 
+                /** TODO:
                 Uri mUri = mGalleryAdapter.getItem(i);
 
 
@@ -65,6 +66,7 @@ public class GalleryFragment extends Fragment {
                 }
 
                 mGalleryAdapter.notifyDataSetChanged();
+                 */
             }
         });
 
@@ -160,10 +162,12 @@ public class GalleryFragment extends Fragment {
 
 
             final Uri mUri = getItem(position);
+            /*
+            * TODO:
             boolean isSelected = mActivity.containsImage(mUri);
 
 
-            holder.root.setForeground(isSelected ? ResourcesCompat.getDrawable(getResources(), R.drawable.gallery_photo_selected, null) : null);
+            holder.root.setForeground(isSelected ? ResourcesCompat.getDrawable(getResources(), R.drawable.sip_gallery_photo_selected, null) : null);
 
             if (holder.uri == null || !holder.uri.equals(mUri)) {
 
@@ -175,12 +179,13 @@ public class GalleryFragment extends Fragment {
                                 //   .override(holder.mThumbnail.getWidth(), holder.mThumbnail.getWidth())
                                 //  .override(holder.root.getWidth(), holder.root.getWidth())
                         .centerCrop()
-                        .placeholder(R.drawable.place_holder_gallery)
-                        .error(R.drawable.no_image)
+                        .placeholder(R.drawable.sip_place_holder_gallery)
+                        .error(R.drawable.sip_no_image)
 
                         .into(holder.mThumbnail);
                 holder.uri = mUri;
             }
+            * */
 
             return convertView;
         }

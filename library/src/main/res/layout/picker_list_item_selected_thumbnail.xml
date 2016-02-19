@@ -39,7 +39,7 @@
         android:layout_gravity="right"
         android:adjustViewBounds="true"
         android:src="@drawable/abc_ic_clear_mtrl_alpha"
-        android:background="@drawable/state_normal"
+        android:background="@drawable/sip_state_normal"
         />
 
 
