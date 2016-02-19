@@ -1,9 +1,6 @@
+#What is SingleImagePicker?
 
-[![Android Arsenal](https://img.shields.io/badge/Android%20Arsenal-TedPicker-green.svg?style=true)](https://android-arsenal.com/details/1/3092) [![Release](https://jitpack.io/v/ParkSangGwon/TedPicker.svg)](https://jitpack.io/ParkSangGwon/TedPicker)
-
-#What is TedPicker?
-
-TedPicker is image selector library for android.<br />
+SingleImagePicker is image selector library for android that allow you select single image.<br />
 Do not waste your time for write image select function code. You can take a picture or select image from gallery.<br />
 
 Also you can customize color, drawable, select count, etc for your application.
@@ -24,13 +21,11 @@ We will use cwac-camera for take a picture. And get library from  [jitpack.io](h
 ```javascript
 
 repositories {
-    maven { url "https://repo.commonsware.com.s3.amazonaws.com" }
-    maven { url "https://jitpack.io" }
-
+    mavenCentral()
 }
 
 dependencies {
-      compile 'com.github.ParkSangGwon:TedPicker:v1.0.5'
+      compile 'com.loyalsound:android-single-image-picker:0.0.1'
 }
 
 ```
@@ -172,16 +167,15 @@ Before call `startActivityForResult()`, set your  `Config` instance to `ImagePic
 
 * `setFlashOn(boolean) (default: false)`
 
-##Thanks 
-* This project is based on [Poly-Picker](https://github.com/jaydeepw/poly-picker) library project 
+##Thanks
 * [Cwac-Camera](https://github.com/commonsguy/cwac-camera) - Taking Pictures. Made Sensible.
 * [Glide](https://github.com/bumptech/glide) - An image loading and caching library 
 * [Android Support Design](http://android-developers.blogspot.kr/2015/05/android-design-support-library.html) 
-
+* [Ted Park](https://github.com/ParkSangGwon/TedPicker) - Original project
 
 ##License 
  ```code
-Copyright 2016 Ted Park
+Copyright 2016 LoyalSound Inc.
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
