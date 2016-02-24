@@ -1,16 +1,44 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <style name="SimpleImagePicker.TabStyle" parent="Widget.Design.TabLayout">
+    <style name="Sip.Theme" parent="Theme.AppCompat.Light.DarkActionBar">
+
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+
+        <item name="sipBackgroundColor">@color/sip_background_color</item>
+        <item name="sipTitleTextColor">@color/sip_title_text_color</item>
+        <item name="sipTabTextColor">@color/sip_tab_text_color</item>
+        <item name="sipTabSelectedTextColor">@color/sip_tab_selected_text_color</item>
+        <item name="sipButtonTextColor">@color/sip_button_text_color</item>
+
+        <item name="sipTabStyle">@style/Sip.Theme.TabStyle</item>
+        <item name="sipTitleTextStyle">@style/Sip.Theme.TitleTextStyle</item>
+
+    </style>
+
+    <style name="Sip.Theme.TabStyle" parent="Widget.Design.TabLayout">
         <item name="tabGravity">fill</item>
-        <item name="tabIndicatorColor">?attr/colorPrimary</item>
-        <item name="tabIndicatorHeight">5dp</item>
+        <item name="tabIndicatorColor">?sipTabSelectedTextColor</item>
+        <item name="tabIndicatorHeight">2dp</item>
         <item name="tabMaxWidth">0dp</item>
         <item name="tabMode">fixed</item>
-        <item name="tabSelectedTextColor">?attr/colorPrimary</item>
-        <item name="tabTextAppearance">@style/CustomText_Body</item>
-        <item name="tabTextColor">@color/custom_txt_whitegray</item>
+        <item name="tabSelectedTextColor">?sipTabSelectedTextColor</item>
+        <item name="tabTextAppearance">@style/Sip.Theme.TabStyle.TextAppearance</item>
+        <item name="tabTextColor">?sipTabTextColor</item>
         <item name="android:background">@android:color/transparent</item>
+    </style>
+
+    <style name="Sip.Theme.TabStyle.TextAppearance" parent="Widget.Design.TabLayout">
+        <item name="android:textSize">14sp</item>
+        <item name="android:textAllCaps">true</item>
+        <item name="android:textColor">?sipTabTextColor</item>
+    </style>
+
+    <style name="Sip.Theme.TitleTextStyle" parent="TextAppearance.AppCompat">
+        <item name="android:textSize">14sp</item>
+        <item name="android:textAllCaps">true</item>
+        <item name="android:textColor">?sipTitleTextColor</item>
     </style>
 
 </resources>

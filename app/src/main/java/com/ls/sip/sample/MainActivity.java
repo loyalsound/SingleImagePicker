@@ -13,16 +13,13 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
-import com.ls.sip.Config;
 import com.ls.sip.ImagePickerActivity;
-
-import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
 
     private static final int INTENT_REQUEST_GET_IMAGES = 13;
 
-    ArrayList<Uri> image_uris = new ArrayList<>();
+    Uri imageUri;
     private ViewGroup mSelectedImagesContainer;
 
     @Override
@@ -34,57 +31,39 @@ public class MainActivity extends AppCompatActivity {
         mSelectedImagesContainer = (ViewGroup) findViewById(R.id.selected_photos_container);
         View getImages = findViewById(R.id.get_images);
         getImages.setOnClickListener(new View.OnClickListener() {
-
-
             @Override
             public void onClick(View v) {
-                getImages();
+                chooseImage();
             }
         });
-
 
         View getImages2 = findViewById(R.id.get_images2);
         getImages2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
-
-                Config config = new Config();
-                config.setCameraHeight(R.dimen.app_camera_height);
-                config.setSelectedBottomHeight(R.dimen.bottom_height);
-                config.setFlashOn(true);
-
-
-                getImages();
+                chooseImage();
             }
         });
 
     }
 
-    private void getImages() {
+    private void chooseImage() {
+        Intent i = new ImagePickerActivity.IntentBuilder(MainActivity.this)
+                .build();
 
-        Intent intent = new Intent(this, ImagePickerActivity.class);
-
-//        if (image_uris != null) {
-//            intent.putParcelableArrayListExtra(ImagePickerActivity.EXTRA_IMAGE_URIS, image_uris);
-//        }
-
-
-        startActivityForResult(intent, INTENT_REQUEST_GET_IMAGES);
-
+        startActivityForResult(i, INTENT_REQUEST_GET_IMAGES);
     }
-
 
     @Override
     protected void onActivityResult(int requestCode, int resuleCode, Intent intent) {
         super.onActivityResult(requestCode, resuleCode, intent);
 
-
         if (resuleCode == Activity.RESULT_OK) {
             if (requestCode == INTENT_REQUEST_GET_IMAGES) {
-//                image_uris = intent.getParcelableArrayListExtra(ImagePickerActivity.EXTRA_IMAGE_URIS);
+                Uri uri = intent.getData();
 
-                if (image_uris != null) {
+                if (uri != null) {
+                    imageUri = uri;
                     showMedia();
                 }
             }
@@ -96,7 +75,7 @@ public class MainActivity extends AppCompatActivity {
         // Remove all views before
         // adding the new ones.
         mSelectedImagesContainer.removeAllViews();
-        if (image_uris.size() >= 1) {
+        if (imageUri != null) {
             mSelectedImagesContainer.setVisibility(View.VISIBLE);
         }
 
@@ -104,20 +83,16 @@ public class MainActivity extends AppCompatActivity {
         int htpx = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 100, getResources().getDisplayMetrics());
 
 
-        for (Uri uri : image_uris) {
+        View imageHolder = LayoutInflater.from(this).inflate(R.layout.image_item, mSelectedImagesContainer, false);
+        ImageView thumbnail = (ImageView) imageHolder.findViewById(R.id.media_image);
 
-            View imageHolder = LayoutInflater.from(this).inflate(R.layout.image_item, null);
-            ImageView thumbnail = (ImageView) imageHolder.findViewById(R.id.media_image);
+        Glide.with(this)
+                .load(imageUri.toString())
+                .fitCenter()
+                .into(thumbnail);
 
-            Glide.with(this)
-                    .load(uri.toString())
-                    .fitCenter()
-                    .into(thumbnail);
+        mSelectedImagesContainer.addView(imageHolder);
 
-            mSelectedImagesContainer.addView(imageHolder);
-
-            thumbnail.setLayoutParams(new FrameLayout.LayoutParams(wdpx, htpx));
-        }
-
+        thumbnail.setLayoutParams(new FrameLayout.LayoutParams(wdpx, htpx));
     }
 }

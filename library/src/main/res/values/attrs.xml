@@ -1,6 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
+    <attr name="sipBackgroundColor" format="color" />
+    <attr name="sipTitleTextColor" format="color" />
+    <attr name="sipTabTextColor" format="color" />
+    <attr name="sipTabSelectedTextColor" format="color" />
+    <attr name="sipButtonTextColor" format="color" />
+
     <attr name="sipTabStyle" format="reference" />
+    <attr name="sipTitleTextStyle" format="reference" />
 
 </resources>

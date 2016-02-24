@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#26272b">
+
+    <FrameLayout
+        android:id="@+id/cwac_cam2_preview_stack"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <com.commonsware.cwac.cam2.CameraView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"/>
+
+        <LinearLayout
+            android:visibility="gone"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <ImageButton
+                android:id="@+id/cwac_cam2_switch_camera"
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:layout_margin="8dp"
+                android:layout_gravity="center_vertical"
+                android:contentDescription="@null"
+                android:src="@drawable/cwac_cam2_ic_switch_camera"/>
+
+        </LinearLayout>
+
+    </FrameLayout>
+
+    <ProgressBar
+        android:id="@+id/cwac_cam2_progress"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:visibility="visible"/>
+
+    <LinearLayout
+        android:id="@+id/button_container"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:gravity="center">
+
+        <ImageButton
+            android:id="@+id/cwac_cam2_picture"
+            android:layout_width="@dimen/sip_button_take_picture_size"
+            android:layout_height="@dimen/sip_button_take_picture_size"
+            android:contentDescription="@null"
+            android:layout_margin="10dp"
+            android:background="@drawable/sip_btn_bg"
+            android:padding="15dp"
+            android:scaleType="fitCenter"
+            android:tint="@android:color/white"
+            />
+
+    </LinearLayout>
+
+</RelativeLayout>
