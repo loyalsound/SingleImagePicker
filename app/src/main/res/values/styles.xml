@@ -19,7 +19,20 @@
     </style>
 
     <style name="MySipTheme" parent="Sip.Theme">
+        <item name="sipCropViewStyle">@style/MySipTheme.CropViewStyle</item>
+    </style>
 
+    <style name="MySipTheme.CropViewStyle" parent="Sip.Theme.CropViewStyle">
+        <item name="sipDimmedColor">@color/sip_crop_dimmed_color</item>
+        <item name="sipOvalDimmedLayer">false</item>
+        <item name="sipShowCropFrame">true</item>
+        <item name="sipCropFrameColor">@color/sip_crop_frame_color</item>
+        <item name="sipCropFrameStrokeWidth">@dimen/sip_crop_frame_stroke_width</item>
+        <item name="sipShowCropGrid">true</item>
+        <item name="sipCropGridRowCount">4</item>
+        <item name="sipCropGridColumnCount">4</item>
+        <item name="sipCropGridColor">@color/sip_crop_grid_color</item>
+        <item name="sipCropGridStrokeWidth">@dimen/sip_crop_grid_stroke_width</item>
     </style>
 
 </resources>

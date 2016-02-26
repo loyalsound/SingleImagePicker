@@ -7,4 +7,6 @@
         <item>Camera</item>
     </string-array>
 
+    <string name="sip_crop_image">Crop</string>
+
 </resources>

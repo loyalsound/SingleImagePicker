@@ -4,15 +4,22 @@ import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.content.res.TypedArray;
+import android.graphics.PorterDuff;
+import android.graphics.drawable.Drawable;
+import android.media.MediaScannerConnection;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.SystemClock;
 import android.provider.MediaStore;
+import android.support.annotation.IntRange;
 import android.support.annotation.NonNull;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.support.v7.app.AppCompatActivity;
@@ -31,6 +38,7 @@ import com.commonsware.cwac.cam2.FocusMode;
 import com.commonsware.cwac.cam2.ImagePickerIntentBuilder;
 import com.commonsware.cwac.cam2.PublicCameraController;
 import com.commonsware.cwac.cam2.util.Utils;
+import com.yalantis.ucrop.UCrop;
 
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
@@ -51,23 +59,21 @@ public class ImagePickerActivity extends AppCompatActivity implements OnPageChan
      * match, whatever the default device behavior is will be
      * used.
      */
-    public static final String EXTRA_FLASH_MODES =
-            "cwac_cam2_flash_modes";
+    public static final String EXTRA_FLASH_MODES = "com_ls_sip_flash_modes";
 
     /**
      * True if we should allow the user to change the flash mode
      * on the fly (if the camera supports it), false otherwise.
      * Defaults to false.
      */
-    public static final String EXTRA_ALLOW_SWITCH_FLASH_MODE =
-            "cwac_cam2_allow_switch_flash_mode";
+    public static final String EXTRA_ALLOW_SWITCH_FLASH_MODE = "com_ls_sip_allow_switch_flash_mode";
 
     /**
      * Extra name for indicating what facing rule for the
      * camera you wish to use. The value should be a
      * CameraSelectionCriteria.Facing instance.
      */
-    public static final String EXTRA_FACING = "cwac_cam2_facing";
+    public static final String EXTRA_FACING = "com_ls_sip_facing";
 
     /**
      * Extra name for indicating that the requested facing
@@ -76,37 +82,35 @@ public class ImagePickerActivity extends AppCompatActivity implements OnPageChan
      * requests to take a picture, for which the desired camera
      * is not available, will be cancelled. Defaults to false.
      */
-    public static final String EXTRA_FACING_EXACT_MATCH =
-            "cwac_cam2_facing_exact_match";
+    public static final String EXTRA_FACING_EXACT_MATCH = "com_ls_sip_facing_exact_match";
 
     /**
      * Extra name for indicating whether extra diagnostic
      * information should be reported, particularly for errors.
      * Default is false.
      */
-    public static final String EXTRA_DEBUG_ENABLED = "cwac_cam2_debug";
+    public static final String EXTRA_DEBUG_ENABLED = "com_ls_sip_debug";
 
     /**
      * Extra name for indicating if MediaStore should be updated
      * to reflect a newly-taken picture. Only relevant if
      * a file:// Uri is used. Default to false.
      */
-    public static final String EXTRA_UPDATE_MEDIA_STORE =
-            "cwac_cam2_update_media_store";
+    public static final String EXTRA_UPDATE_MEDIA_STORE = "com_ls_sip_update_media_store";
 
     /**
      * If set to true, forces the use of the ClassicCameraEngine
      * on Android 5.0+ devices. Has no net effect on Android 4.x
      * devices. Defaults to false.
      */
-    public static final String EXTRA_FORCE_CLASSIC = "cwac_cam2_force_classic";
+    public static final String EXTRA_FORCE_CLASSIC = "com_ls_sip_force_classic";
 
     /**
      * If set to true, horizontally flips or mirrors the preview.
      * Does not change the picture or video output. Used mostly for FFC,
      * though will be honored for any camera. Defaults to false.
      */
-    public static final String EXTRA_MIRROR_PREVIEW = "cwac_cam2_mirror_preview";
+    public static final String EXTRA_MIRROR_PREVIEW = "com_ls_sip_mirror_preview";
 
     /**
      * Extra name for focus mode to apply. Value should be one of the
@@ -114,17 +118,26 @@ public class ImagePickerActivity extends AppCompatActivity implements OnPageChan
      * If the desired focus mode is not available, the device default
      * focus mode is used.
      */
-    public static final String EXTRA_FOCUS_MODE = "cwac_cam2_focus_mode";
+    public static final String EXTRA_FOCUS_MODE = "com_ls_sip_focus_mode";
 
-    public static final String EXTRA_REQUIRE_CROP = "sip_require_crop";
+    public static final String EXTRA_SAVE_INTERMEDIATE_FILE = "com_ls_sip_save_intermediate_file";
+    public static final String EXTRA_REQUIRE_CROP = "com_ls_sip_require_crop";
 
-    public static final String EXTRA_NEED_THUMBNAIL = "sip_need_thumbnail";
+    public static final String EXTRA_ASPECT_RATIO_SET = "com_ls_sip_aspect_ratio_set";
+    public static final String EXTRA_ASPECT_RATIO_X = "com_ls_sip_aspect_ratio_x";
+    public static final String EXTRA_ASPECT_RATIO_Y = "com_ls_sip_aspect_ratio_y";
+
+    public static final String EXTRA_MAX_SIZE_SET = "com_ls_sip_max_size_set";
+    public static final String EXTRA_MAX_SIZE_X = "com_ls_sip_max_size_x";
+    public static final String EXTRA_MAX_SIZE_Y = "com_ls_sip_max_size_y";
+    public static final String EXTRA_USE_SOURCE_IMAGE_ASPECT_RATIO = "com_ls_sip_use_source_image_ratio";
 
     public static final String[] PERMS = new String[]{"android.permission.CAMERA"};
 
-    protected static final String TAG_CAMERA = ImagePickerActivity.class.getCanonicalName();
+    protected static final String TAG = ImagePickerActivity.class.getCanonicalName();
 
     private static final int REQUEST_PERMS = 13401;
+    private static final int REQUEST_CROP = 13402;
 
     protected Toolbar mToolbar;
     protected TextView mTitleTextView;
@@ -133,13 +146,21 @@ public class ImagePickerActivity extends AppCompatActivity implements OnPageChan
 
     protected PickerPagerAdapter mAdapter;
     protected Uri mOutputUri;
+    protected Uri mIntermediateUri;
     protected boolean mAlreadyHasRequiredPermissions;
+
+    private int mToolbarIconColor;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         Utils.validateEnvironment(this);
+
+        int[] toolbarIconColorAttr = new int[] { R.attr.sipToolbarIconColor };
+        TypedArray a = obtainStyledAttributes(toolbarIconColorAttr);
+        mToolbarIconColor = a.getColor(0, ContextCompat.getColor(this, android.R.color.white));
+        a.recycle();
 
         setContentView(R.layout.sip_activity_image_picker);
 
@@ -168,9 +189,13 @@ public class ImagePickerActivity extends AppCompatActivity implements OnPageChan
 
         setSupportActionBar(mToolbar);
         if (getSupportActionBar() != null) {
+            Drawable upIndicator = ContextCompat.getDrawable(this, R.drawable.sip_ic_close_white_24dp);
+            upIndicator.setColorFilter(mToolbarIconColor, PorterDuff.Mode.SRC_ATOP);
+
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
             getSupportActionBar().setHomeButtonEnabled(true);
-            getSupportActionBar().setHomeAsUpIndicator(R.drawable.sip_ic_close_white_24dp);
+            getSupportActionBar().setHomeAsUpIndicator(upIndicator);
+            getSupportActionBar().setDisplayShowTitleEnabled(false);
         }
     }
 
@@ -232,40 +257,77 @@ public class ImagePickerActivity extends AppCompatActivity implements OnPageChan
     @SuppressWarnings("unused")
     public void onEventMainThread(CameraEngine.PictureTakenEvent event) {
         if (event.exception == null) {
-            completeRequest(getOutputUri());
+            completeRequest(getIntermediateUri());
+
+            // Force update mediastore if required to save intermediate file
+            if (getIntent().getBooleanExtra(EXTRA_SAVE_INTERMEDIATE_FILE, false)) {
+                new Thread() {
+                    @Override
+                    public void run() {
+                        SystemClock.sleep(2000);
+                        MediaScannerConnection.scanFile(
+                                ImagePickerActivity.this,
+                                new String[]{ getIntermediateUri().getPath() },
+                                null,
+                                null);
+                    }
+                }.start();
+            }
         } else {
             finish();
         }
     }
 
-    public void completeRequest(final Uri selectedUri) {
-//        boolean needsThumbnail = getIntent().getBooleanExtra(EXTRA_NEED_THUMBNAIL, false);
-//        if (needsThumbnail) {
-//            final Intent result = new Intent();
-//
-//            result.putExtra("data", imageContext.buildResultThumbnail());
-//
-//            findViewById(android.R.id.content).post(new Runnable() {
-//                @Override
-//                public void run() {
-//                    setResult(RESULT_OK, result);
-////                        removeFragments();
-//                }
-//            });
-//        }
-//        else {
-            findViewById(android.R.id.content).post(new Runnable() {
-                @Override
-                public void run() {
-                    setResult(RESULT_OK, new Intent().setData(selectedUri));
-                    finish();
-//                        removeFragments();
-                }
-            });
-//        }
+    public void onEventMainThread(GalleryFragment.PictureSelectedEvent event) {
+        completeRequest(event.getUri());
     }
 
-    protected Uri getOutputUri() {
+    private void completeRequest(final Uri uri) {
+        if (getIntent().getBooleanExtra(EXTRA_REQUIRE_CROP, false)) {
+            openCrop(uri);
+        } else {
+            setResultAndFinish(uri);
+        }
+    }
+
+    private void setResultAndFinish(final Uri uri) {
+        findViewById(android.R.id.content).post(new Runnable() {
+            @Override
+            public void run() {
+                setResult(RESULT_OK, new Intent().setData(uri));
+                finish();
+            }
+        });
+    }
+
+    private void openCrop(final Uri selectedUri) {
+        Intent intent = buildCropIntent(selectedUri, getOutputUri());
+        startActivityForResult(intent, REQUEST_CROP);
+    }
+
+    private Intent buildCropIntent(Uri source, Uri destination) {
+        UCrop uCrop = UCrop.of(source, destination);
+        if (getIntent().getBooleanExtra(EXTRA_ASPECT_RATIO_SET, false)) {
+            uCrop.withAspectRatio(
+                    getIntent().getFloatExtra(EXTRA_ASPECT_RATIO_X, 0),
+                    getIntent().getFloatExtra(EXTRA_ASPECT_RATIO_Y, 0));
+        }
+
+        if (getIntent().getBooleanExtra(EXTRA_USE_SOURCE_IMAGE_ASPECT_RATIO, false)) {
+            uCrop.useSourceImageAspectRatio();
+        }
+
+        if (getIntent().getBooleanExtra(EXTRA_MAX_SIZE_SET, false)) {
+            uCrop.withMaxResultSize(
+                    getIntent().getIntExtra(EXTRA_MAX_SIZE_X, 0),
+                    getIntent().getIntExtra(EXTRA_MAX_SIZE_Y, 0));
+        }
+        return uCrop
+                .getIntent(ImagePickerActivity.this)
+                .setClass(ImagePickerActivity.this, ImageCropActivity.class);
+    }
+
+    private Uri getOutputUri() {
         if (mOutputUri == null) {
             Uri output = getIntent().getParcelableExtra(MediaStore.EXTRA_OUTPUT);
 
@@ -277,7 +339,7 @@ public class ImagePickerActivity extends AppCompatActivity implements OnPageChan
                     try {
                         output = com.ls.sip.Utils.getCachePhotoPath(this);
                     } catch (IOException e) {
-                        Log.e(TAG_CAMERA, "Cannot create cache file to store photo/video", e);
+                        Log.e(TAG, "Cannot create cache file to store photo/video", e);
                         output = com.ls.sip.Utils.getPhotoPath();
                     }
                 }
@@ -288,6 +350,30 @@ public class ImagePickerActivity extends AppCompatActivity implements OnPageChan
         return mOutputUri;
     }
 
+    /**
+     * Return {@link Uri} used to store picture after taken.
+     * If crop is not enabled, this method will return same result as {@link #getOutputUri()}.
+     * If required to save intermediate file, we should store image into a public directory.
+     */
+    private Uri getIntermediateUri() {
+        if (!getIntent().getBooleanExtra(EXTRA_REQUIRE_CROP, false)) {
+            return getOutputUri();
+        }
+        if (mIntermediateUri == null) {
+            if (getIntent().getBooleanExtra(EXTRA_SAVE_INTERMEDIATE_FILE, false)) {
+                mIntermediateUri = com.ls.sip.Utils.getPhotoPath();
+            } else {
+                try {
+                    mIntermediateUri = com.ls.sip.Utils.getCachePhotoPath(this);
+                } catch (IOException e) {
+                    Log.e(TAG, "Cannot create cache file to store photo/video", e);
+                    mIntermediateUri = com.ls.sip.Utils.getPhotoPath();
+                }
+            }
+        }
+        return mIntermediateUri;
+    }
+
     private void setupTabs() {
         mAdapter = new PickerPagerAdapter(this, getSupportFragmentManager());
         mViewPager.addOnPageChangeListener(this);
@@ -295,13 +381,6 @@ public class ImagePickerActivity extends AppCompatActivity implements OnPageChan
         mTabLayout.setupWithViewPager(mViewPager);
         mTitleTextView.setText(mAdapter.getPageTitle(0));
     }
-
-//    @Override
-//    public boolean onCreateOptionsMenu(Menu menu) {
-//        MenuInflater inflater = getMenuInflater();
-//        inflater.inflate(R.menu.sip_menu_confirm, menu);
-//        return super.onCreateOptionsMenu(menu);
-//    }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -311,25 +390,21 @@ public class ImagePickerActivity extends AppCompatActivity implements OnPageChan
             finish();
             return true;
         }
-//        else if (id == R.id.sip_action_done) {
-//            updatePicture();
-//            return true;
-//        }
 
         return super.onOptionsItemSelected(item);
     }
 
-//    private void updatePicture() {
-//        // TODO: Fix message
-//        if (mOutputUri == null) {
-//            return;
-//        }
-//
-//        Intent intent = new Intent();
-//        intent.putExtra(EXTRA_IMAGE_URI, mOutputUri);
-//        setResult(Activity.RESULT_OK, intent);
-//        finish();
-//    }
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (resultCode == RESULT_OK && requestCode == REQUEST_CROP) {
+            final Uri resultUri = UCrop.getOutput(data);
+            setResultAndFinish(resultUri);
+        } else if (resultCode == UCrop.RESULT_ERROR) {
+            final Throwable cropError = UCrop.getError(data);
+            Log.e(TAG, "Fail to crop image", cropError);
+            finish();
+        }
+    }
 
     @Override
     public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
@@ -477,6 +552,9 @@ public class ImagePickerActivity extends AppCompatActivity implements OnPageChan
      * Class to build an Intent used to start the ImagePickerActivity.
      */
     public static class IntentBuilder extends ImagePickerIntentBuilder {
+
+        private CropOptions cropOptions = new CropOptions();
+
         /**
          * Standard constructor. May throw a runtime exception
          * if the environment is not set up properly (see
@@ -488,10 +566,58 @@ public class ImagePickerActivity extends AppCompatActivity implements OnPageChan
             super(ctxt, ImagePickerActivity.class);
         }
 
-        public IntentBuilder debugSavePreviewFrame() {
-            //result.putExtra(EXTRA_DEBUG_SAVE_PREVIEW_FRAME, true);
+        public CropOptions crop() {
+            result.putExtra(EXTRA_REQUIRE_CROP, true);
+            return cropOptions;
+        }
+        
+        public class CropOptions {
 
-            return(this);
+            /**
+             * Set an aspect ratio for crop bounds.
+             *
+             * @param x aspect ratio X
+             * @param y aspect ratio Y
+             */
+            public CropOptions withAspectRatio(float x, float y) {
+                result.putExtra(EXTRA_ASPECT_RATIO_SET, true);
+                result.putExtra(EXTRA_ASPECT_RATIO_X, x);
+                result.putExtra(EXTRA_ASPECT_RATIO_Y, y);
+                return this;
+            }
+
+            /**
+             * Set an aspect ratio for crop bounds that is evaluated from source image width and height.
+             */
+            public CropOptions useSourceImageAspectRatio() {
+                result.putExtra(EXTRA_USE_SOURCE_IMAGE_ASPECT_RATIO, true);
+                result.removeExtra(EXTRA_ASPECT_RATIO_SET);
+                result.removeExtra(EXTRA_ASPECT_RATIO_X);
+                result.removeExtra(EXTRA_ASPECT_RATIO_Y);
+                return this;
+            }
+
+            /**
+             * Set maximum size for result cropped image.
+             *
+             * @param width  max cropped image width
+             * @param height max cropped image height
+             */
+            public CropOptions withMaxResultSize(@IntRange(from = 100) int width, @IntRange(from = 100) int height) {
+                result.putExtra(EXTRA_MAX_SIZE_SET, true);
+                result.putExtra(EXTRA_MAX_SIZE_X, width);
+                result.putExtra(EXTRA_MAX_SIZE_Y, height);
+                return this;
+            }
+
+            public CropOptions saveIntermediateFile() {
+                result.putExtra(EXTRA_SAVE_INTERMEDIATE_FILE, true);
+                return this;
+            }
+
+            public IntentBuilder and() {
+                return IntentBuilder.this;
+            }
         }
     }
 

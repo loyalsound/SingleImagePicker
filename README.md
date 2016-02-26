@@ -10,7 +10,9 @@ I use cwac-cam2 for take a picture.
 ## Demo
 ![Screenshot](images/image1.png) 
 
-![Screenshot](images/image2.png)       
+![Screenshot](images/image2.png)     
+  
+![Screenshot](images/image3.png)     
 
 ##Setup
 
@@ -22,7 +24,7 @@ repositories {
 }
 
 dependencies {
-      compile 'com.loyalsound:android-single-image-picker:0.0.1'
+      compile 'com.loyalsound:android-single-image-picker:0.0.2'
 }
 ```
 
@@ -30,13 +32,11 @@ dependencies {
 Add permission for Camera, External Storage.
 
 ```javascript
-
 <uses-feature android:name="android.hardware.camera" />
 <uses-feature android:name="android.hardware.camera.autofocus" android:required="false" />
 
 <uses-permission android:name="android.permission.CAMERA" />
 <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-
 ```
 
 #####Activity
@@ -59,16 +59,32 @@ ImagePickerActivity use toolbar without actionbar
     <item name="sipTabTextColor">@color/sip_tab_text_color</item>
     <item name="sipTabSelectedTextColor">@color/sip_tab_selected_text_color</item>
     <item name="sipButtonTextColor">@color/sip_button_text_color</item>
+    <item name="sipToolbarIconColor">@color/sip_toolbar_icon_color</item>
 
     <item name="sipTabStyle">@style/Sip.Theme.TabStyle</item>
     <item name="sipTitleTextStyle">@style/Sip.Theme.TitleTextStyle</item>
 
+    <item name="sipCropViewStyle">@style/Sip.Theme.CropViewStyle</item>
+    <item name="sipCropBackground">@drawable/sip_cropview_bg_repeat</item>
+
 </style>
 ```
 
-
-
-
+Customize style of crop screen
+```javascript
+<style name="MySipTheme.CropViewStyle" parent="Sip.Theme.CropViewStyle">
+    <item name="sipDimmedColor">@color/sip_crop_dimmed_color</item>
+    <item name="sipOvalDimmedLayer">false</item>
+    <item name="sipShowCropFrame">true</item>
+    <item name="sipCropFrameColor">@color/sip_crop_frame_color</item>
+    <item name="sipCropFrameStrokeWidth">@dimen/sip_crop_frame_stroke_width</item>
+    <item name="sipShowCropGrid">true</item>
+    <item name="sipCropGridRowCount">4</item>
+    <item name="sipCropGridColumnCount">4</item>
+    <item name="sipCropGridColor">@color/sip_crop_grid_color</item>
+    <item name="sipCropGridStrokeWidth">@dimen/sip_crop_grid_stroke_width</item>
+</style>
+```
 
 ##How to use
 
@@ -80,7 +96,12 @@ private static final int INTENT_REQUEST_GET_IMAGES = 13;
 
 private void chooseImage() {
 
-    Intent i = new ImagePickerActivity.IntentBuilder(MainActivity.this).build();
+    Intent i = new ImagePickerActivity.IntentBuilder(MainActivity.this)
+                .crop()
+                    .useSourceImageAspectRatio()
+                    .saveIntermediateFile()
+                    .and()
+                .build();
     
     startActivityForResult(i, INTENT_REQUEST_GET_IMAGES);
 
@@ -107,9 +128,13 @@ protected void onActivityResult(int requestCode, int resuleCode, Intent intent) 
 ## Contributions
 * Thanh Nguyen [@9you](https://github.com/9you)
 
+## Changes log
+* 0.0.2: Add cropping image feature. Change `statusBarColor` and `navigationBarColor`
+
 ## Thanks
-* [CWAC-Cam2](https://github.com/commonsguy/cwac-cam2) - Taking Pictures. Made Sensible.
-* [Glide](https://github.com/bumptech/glide) - An image loading and caching library
+* [CommonsGuy](https://github.com/commonsguy) for [Cam2](https://github.com/commonsguy/cwac-cam2) - A taking picture library
+* [Yalantis](https://github.com/Yalantis) for [UCrop](https://github.com/Yalantis/uCrop) - An image cropping library
+* [bumptech](https://github.com/bumptech) for [Glide](https://github.com/bumptech/glide) - An image loading and caching library
 * [Ted Park](https://github.com/ParkSangGwon/TedPicker) - Original project
 
 ## License 

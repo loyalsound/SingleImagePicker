@@ -6,5 +6,10 @@
     <color name="sip_tab_text_color">#a6a7ab</color>
     <color name="sip_tab_selected_text_color">#408dd3</color>
     <color name="sip_button_text_color">#408dd3</color>
+    <color name="sip_toolbar_icon_color">#FFFFFF</color>
+
+    <color name="sip_crop_dimmed_color">#8c000000</color>
+    <color name="sip_crop_frame_color">#ffffff</color>
+    <color name="sip_crop_grid_color">#80ffffff</color>
 
 </resources>

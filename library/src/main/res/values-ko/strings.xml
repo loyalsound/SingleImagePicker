@@ -1,8 +1,0 @@
-<resources>
-
-    <string-array name="sip_tab_titles">
-        <item>갤러리</item>
-        <item>카메라</item>
-    </string-array>
-
-</resources>

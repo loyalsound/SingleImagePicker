@@ -3,4 +3,7 @@
 
     <dimen name="sip_button_take_picture_size">60dp</dimen>
 
+    <dimen name="sip_crop_frame_stroke_width">1dp</dimen>
+    <dimen name="sip_crop_grid_stroke_width">1dp</dimen>
+
 </resources>

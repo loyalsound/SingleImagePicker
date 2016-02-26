@@ -12,6 +12,7 @@
 
     <uses-permission android:name="android.permission.CAMERA" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
 
     <application
         android:allowBackup="true"
@@ -31,7 +32,12 @@
         <activity
             android:name="com.ls.sip.ImagePickerActivity"
             android:screenOrientation="portrait"
-            android:theme="@style/Sip.Theme" />
+            android:theme="@style/MySipTheme" />
+
+        <activity
+            android:name="com.ls.sip.ImageCropActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/MySipTheme" />
 
     </application>
 

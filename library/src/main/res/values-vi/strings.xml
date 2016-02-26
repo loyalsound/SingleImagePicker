@@ -1,0 +1,12 @@
+<resources>
+
+    <string name="sip_action_done">Xong</string>
+
+    <string-array name="sip_tab_titles">
+        <item>Thư viện</item>
+        <item>Chụp ảnh</item>
+    </string-array>
+
+    <string name="sip_crop_image">Cắt ảnh</string>
+
+</resources>

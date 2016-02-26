@@ -6,8 +6,25 @@
     <attr name="sipTabTextColor" format="color" />
     <attr name="sipTabSelectedTextColor" format="color" />
     <attr name="sipButtonTextColor" format="color" />
+    <attr name="sipToolbarIconColor" format="color" />
 
     <attr name="sipTabStyle" format="reference" />
     <attr name="sipTitleTextStyle" format="reference" />
+
+    <attr name="sipCropViewStyle" format="reference" />
+    <attr name="sipCropBackground" format="reference|color" />
+    
+    <declare-styleable name="SipCropView">
+        <attr name="sipDimmedColor" format="color" />
+        <attr name="sipOvalDimmedLayer" format="boolean" />
+        <attr name="sipShowCropFrame" format="boolean" />
+        <attr name="sipCropFrameColor" format="color" />
+        <attr name="sipCropFrameStrokeWidth" format="dimension" />
+        <attr name="sipShowCropGrid" format="boolean" />
+        <attr name="sipCropGridRowCount" format="integer" />
+        <attr name="sipCropGridColumnCount" format="integer" />
+        <attr name="sipCropGridColor" format="color" />
+        <attr name="sipCropGridStrokeWidth" format="dimension" />
+    </declare-styleable>
 
 </resources>

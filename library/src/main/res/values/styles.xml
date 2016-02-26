@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <style name="Sip.Theme" parent="Theme.AppCompat.Light.DarkActionBar">
+    <style name="Sip.Theme.Base" parent="Theme.AppCompat.Light.DarkActionBar">
 
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
@@ -11,9 +11,16 @@
         <item name="sipTabTextColor">@color/sip_tab_text_color</item>
         <item name="sipTabSelectedTextColor">@color/sip_tab_selected_text_color</item>
         <item name="sipButtonTextColor">@color/sip_button_text_color</item>
+        <item name="sipToolbarIconColor">@color/sip_toolbar_icon_color</item>
 
         <item name="sipTabStyle">@style/Sip.Theme.TabStyle</item>
         <item name="sipTitleTextStyle">@style/Sip.Theme.TitleTextStyle</item>
+
+        <item name="sipCropViewStyle">@style/Sip.Theme.CropViewStyle</item>
+        <item name="sipCropBackground">@drawable/sip_cropview_bg_repeat</item>
+    </style>
+
+    <style name="Sip.Theme" parent="Sip.Theme.Base">
 
     </style>
 
@@ -39,6 +46,19 @@
         <item name="android:textSize">14sp</item>
         <item name="android:textAllCaps">true</item>
         <item name="android:textColor">?sipTitleTextColor</item>
+    </style>
+
+    <style name="Sip.Theme.CropViewStyle" parent="android:Widget">
+        <item name="sipDimmedColor">@color/sip_crop_dimmed_color</item>
+        <item name="sipOvalDimmedLayer">false</item>
+        <item name="sipShowCropFrame">true</item>
+        <item name="sipCropFrameColor">@color/sip_crop_frame_color</item>
+        <item name="sipCropFrameStrokeWidth">@dimen/sip_crop_frame_stroke_width</item>
+        <item name="sipShowCropGrid">true</item>
+        <item name="sipCropGridRowCount">2</item>
+        <item name="sipCropGridColumnCount">2</item>
+        <item name="sipCropGridColor">@color/sip_crop_grid_color</item>
+        <item name="sipCropGridStrokeWidth">@dimen/sip_crop_grid_stroke_width</item>
     </style>
 
 </resources>

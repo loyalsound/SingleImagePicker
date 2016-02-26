@@ -41,7 +41,7 @@ public class MainActivity extends AppCompatActivity {
         getImages2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                chooseImage();
+                chooseImageCustom();
             }
         });
 
@@ -49,6 +49,17 @@ public class MainActivity extends AppCompatActivity {
 
     private void chooseImage() {
         Intent i = new ImagePickerActivity.IntentBuilder(MainActivity.this)
+                .build();
+
+        startActivityForResult(i, INTENT_REQUEST_GET_IMAGES);
+    }
+
+    private void chooseImageCustom() {
+        Intent i = new ImagePickerActivity.IntentBuilder(MainActivity.this)
+                .crop()
+                    .useSourceImageAspectRatio()
+                    .saveIntermediateFile()
+                    .and()
                 .build();
 
         startActivityForResult(i, INTENT_REQUEST_GET_IMAGES);

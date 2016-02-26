@@ -17,8 +17,11 @@ import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+
+import de.greenrobot.event.EventBus;
 
 /**
  * @author Gil
@@ -46,10 +49,9 @@ public class GalleryFragment extends Fragment {
         galleryGridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-
+                // Ensure uri have scheme
                 Uri uri = mGalleryAdapter.getItem(i);
-                mActivity.completeRequest(uri);
-
+                EventBus.getDefault().post(new PictureSelectedEvent(Uri.fromFile(new File(uri.getPath()))));
             }
         });
 
@@ -157,6 +159,23 @@ public class GalleryFragment extends Fragment {
             }
 
             return convertView;
+        }
+    }
+
+    public static class PictureSelectedEvent {
+
+        private Uri uri;
+
+        public PictureSelectedEvent(Uri uri) {
+            this.uri = uri;
+        }
+
+        public Uri getUri() {
+            return uri;
+        }
+
+        public void setUri(Uri uri) {
+            this.uri = uri;
         }
     }
 }

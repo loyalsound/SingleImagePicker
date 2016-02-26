@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="Sip.Theme" parent="Sip.Theme.Base">
+
+        <item name="android:statusBarColor">?sipBackgroundColor</item>
+        <item name="android:navigationBarColor">?sipBackgroundColor</item>
+
+    </style>
+
+</resources>
