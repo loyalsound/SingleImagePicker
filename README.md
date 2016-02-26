@@ -3,23 +3,19 @@
 SingleImagePicker is image selector library for android that allow you select single image.<br />
 Do not waste your time for write image select function code. You can take a picture or select image from gallery.<br />
 
-Also you can customize color, drawable, select count, etc for your application.
+Also you can customize color, drawable, etc for your application.
 
+I use cwac-cam2 for take a picture.
 
-##Demo
+## Demo
+![Screenshot](images/image1.png) 
 
-[Watch video at youtube](https://youtu.be/fGnJ03h1cK0)
-
-<br />
-![Screenshot](https://github.com/ParkSangGwon/TedPicker/blob/master/Screenshot.png?raw=true)    
-           
+![Screenshot](images/image2.png)       
 
 ##Setup
 
 #####Gradle
-We will use cwac-camera for take a picture. And get library from  [jitpack.io](https://jitpack.io/)
 ```javascript
-
 repositories {
     mavenCentral()
 }
@@ -27,7 +23,6 @@ repositories {
 dependencies {
       compile 'com.loyalsound:android-single-image-picker:0.0.1'
 }
-
 ```
 
 #####Permission
@@ -44,33 +39,30 @@ Add permission for Camera, External Storage.
 ```
 
 #####Activity
-Declare Activity in your  `AndroidManifest.xml`
-
-
+Declare Activity in your `AndroidManifest.xml`
 
 ```javascript
-
-<activity android:name="com.ls.sip.ImagePickerActivity"
-                      android:screenOrientation="portrait"
-/>
-
+<activity
+        android:name="com.ls.sip.ImagePickerActivity"
+        android:screenOrientation="portrait"
+        android:theme="@style/Sip.Theme" />
 ```
 
-
-you have to use `AppCompat` theme like this.
+If you want to customize theme, just simply extend original theme like this.
 ImagePickerActivity use toolbar without actionbar
 ```javascript
+<style name="MySipTheme" parent="Sip.Theme">
+    
+    <item name="sipBackgroundColor">@color/sip_background_color</item>
+    <item name="sipTitleTextColor">@color/sip_title_text_color</item>
+    <item name="sipTabTextColor">@color/sip_tab_text_color</item>
+    <item name="sipTabSelectedTextColor">@color/sip_tab_selected_text_color</item>
+    <item name="sipButtonTextColor">@color/sip_button_text_color</item>
 
-    <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
-        <!-- Customize your theme here. -->
-        <item name="colorPrimary">@color/colorPrimary</item>
-        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
-        <item name="colorAccent">@color/colorAccent</item>
+    <item name="sipTabStyle">@style/Sip.Theme.TabStyle</item>
+    <item name="sipTitleTextStyle">@style/Sip.Theme.TitleTextStyle</item>
 
-
-        <item name="windowActionBar">false</item>
-        <item name="windowNoTitle">true</item>
-
+</style>
 ```
 
 
@@ -83,98 +75,44 @@ ImagePickerActivity use toolbar without actionbar
 Add your request code for `startActivityForResult()` and start `ImagePickerActivity`
 
 ```javascript
+private static final int INTENT_REQUEST_GET_IMAGES = 13;
 
-    private static final int INTENT_REQUEST_GET_IMAGES = 13;
+private void chooseImage() {
 
-    private void getImages() {
+    Intent i = new ImagePickerActivity.IntentBuilder(MainActivity.this).build();
+    
+    startActivityForResult(i, INTENT_REQUEST_GET_IMAGES);
 
-        Intent intent  = new Intent(this, ImagePickerActivity.class);
-        startActivityForResult(intent,INTENT_REQUEST_GET_IMAGES);
-
-    }
-
+}
 ```
 
 
 #####2. Receive Activity
 If you finish image select, you will recieve image path array (Uri type)
 ```javascript
+@Override
+protected void onActivityResult(int requestCode, int resuleCode, Intent intent) {
+    super.onActivityResult(requestCode, resuleCode, intent);
 
-    @Override
-    protected void onActivityResult(int requestCode, int resuleCode, Intent intent) {
-        super.onActivityResult(requestCode, resuleCode, intent);
+    if (requestCode == INTENT_REQUEST_GET_IMAGES && resuleCode == Activity.RESULT_OK ) {
 
-            if (requestCode == INTENT_REQUEST_GET_IMAGES && resuleCode == Activity.RESULT_OK ) {
+        Uri selectedImageUri = intent.getData();
 
-                ArrayList<Uri>  image_uris = intent.getParcelableArrayListExtra(ImagePickerActivity.EXTRA_IMAGE_URIS);
-
-                //do something
-            }
+        //do something
     }
-
+}
 ```
 
+## Contributions
+* Thanh Nguyen [@9you](https://github.com/9you)
 
-
-
-
-##Customize
-You can change color, drawable, height ...<br />
-Before call `startActivityForResult()`, set your  `Config` instance to `ImagePickerActivity`
-
-#####Example
-```javascript
-
-        Config config = new Config();
-        config.setCameraHeight(R.dimen.app_camera_height);
-        config.setToolbarTitleRes(R.string.custom_title);
-        config.setSelectionMin(2);
-        config.setSelectionLimit(4);
-        config.setSelectedBottomHeight(R.dimen.bottom_height);
-
-        ImagePickerActivity.setConfig(config);
-
-        Intent intent = new Intent(this, ImagePickerActivity.class);
-        startActivityForResult(intent, INTENT_REQUEST_GET_IMAGES);
-
-```
-
-#####Function
-
-* `setCameraHeight(R.dimen.xxx) (default: 250dp)`
-
-* `setSelectedBottomHeight(R.dimen.xxx) (default: 90dp)`
-
-* `setSelectedBottomColor(R.color.xxx) (default: R.attr.colorAccent)`
-
-* `setToolbarTitleRes(R.string.xxx) (default: Choice Image / 사진선택)`
-
-* `setTabBackgroundColor(R.color.xxx) (default: #fff)`
-
-* `setTabSelectionIndicatorColor(R.color.xxx) (default: R.attr.colorPrimary)`
-
-* `setSelectionLimit(int)` 
-
-* `setSelectionMin(int)`
-
-* `setCameraBtnImage(R.drawable.xxx)`
-
-* `setCameraBtnBackground(R.drawable.xxx)`
-
-* `setSelectedCloseImage(R.drawable.xxx)`
-
-* `setSavedDirectoryName(R.string.xxx) (default: Pictures)`
-
-* `setFlashOn(boolean) (default: false)`
-
-##Thanks
-* [Cwac-Camera](https://github.com/commonsguy/cwac-camera) - Taking Pictures. Made Sensible.
-* [Glide](https://github.com/bumptech/glide) - An image loading and caching library 
-* [Android Support Design](http://android-developers.blogspot.kr/2015/05/android-design-support-library.html) 
+## Thanks
+* [CWAC-Cam2](https://github.com/commonsguy/cwac-cam2) - Taking Pictures. Made Sensible.
+* [Glide](https://github.com/bumptech/glide) - An image loading and caching library
 * [Ted Park](https://github.com/ParkSangGwon/TedPicker) - Original project
 
-##License 
- ```code
+## License 
+```
 Copyright 2016 LoyalSound Inc.
 
 Licensed under the Apache License, Version 2.0 (the "License");
@@ -188,3 +126,4 @@ distributed under the License is distributed on an "AS IS" BASIS,
 WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.```
+```
