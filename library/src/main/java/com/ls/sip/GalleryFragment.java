@@ -71,7 +71,7 @@ public class GalleryFragment extends Fragment {
 
     public List<Uri> getImagesFromGallary(Context context) {
 
-        List<Uri> images = new ArrayList<>();
+        List<Uri> images = new ArrayList<Uri>();
 
         Cursor imageCursor = null;
 

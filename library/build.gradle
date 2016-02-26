@@ -1,6 +1,10 @@
+buildscript {
+    dependencies {
+        classpath 'com.android.tools.build:gradle:1.5.0'
+    }
+}
+
 apply plugin: 'com.android.library'
-apply plugin: 'com.github.dcendents.android-maven'
-group = 'com.loyalsound'
 
 android {
     compileSdkVersion 23
@@ -11,11 +15,21 @@ android {
         targetSdkVersion 23
 
     }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_6
+        targetCompatibility JavaVersion.VERSION_1_6
+    }
+
     buildTypes {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
+    }
+
+    lintOptions {
+        abortOnError false
     }
 }
 
@@ -26,3 +40,5 @@ dependencies {
     compile 'com.github.bumptech.glide:glide:3.6.1'
     compile 'com.commonsware.cwac:cam2:0.5.1'
 }
+
+apply from: rootProject.file('gradle/gradle-mvn-push.gradle')

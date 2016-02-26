@@ -18,6 +18,7 @@ I use cwac-cam2 for take a picture.
 ```javascript
 repositories {
     mavenCentral()
+    maven { url "https://s3.amazonaws.com/repo.commonsware.com" }
 }
 
 dependencies {
