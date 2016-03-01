@@ -385,14 +385,14 @@ public class ImagePickerActivity extends AppCompatActivity implements OnPageChan
             final Uri resultUri = UCrop.getOutput(data);
 
             // Update mediastore if required
-            if (getIntent().getBooleanExtra(EXTRA_UPDATE_MEDIA_STORE, false)) {
+            if (getIntent().getBooleanExtra(EXTRA_UPDATE_MEDIA_STORE, false) && resultUri != null) {
                 new Thread() {
                     @Override
                     public void run() {
                         SystemClock.sleep(2000);
                         MediaScannerConnection.scanFile(
                                 ImagePickerActivity.this,
-                                new String[]{ getIntermediateUri().getPath() },
+                                new String[]{ resultUri.getPath() },
                                 null,
                                 null);
                     }
@@ -539,7 +539,7 @@ public class ImagePickerActivity extends AppCompatActivity implements OnPageChan
                                 && !getIntent().getBooleanExtra(EXTRA_REQUIRE_CROP, false))
                             || (getIntent().getBooleanExtra(EXTRA_SAVE_INTERMEDIATE_FILE, false)
                                 && getIntent().getBooleanExtra(EXTRA_REQUIRE_CROP, false));
-                    
+
                     CameraFragment cameraFragment = CameraFragment.newPictureInstance(getIntermediateUri(), updateMediaStore);
                     if (mAlreadyHasRequiredPermissions) {
                         initCamera(cameraFragment);
