@@ -37,6 +37,7 @@ Add permission for Camera, External Storage.
 
 <uses-permission android:name="android.permission.CAMERA" />
 <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+<uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
 ```
 
 #####Activity
@@ -45,6 +46,11 @@ Declare Activity in your `AndroidManifest.xml`
 ```javascript
 <activity
         android:name="com.ls.sip.ImagePickerActivity"
+        android:screenOrientation="portrait"
+        android:theme="@style/Sip.Theme" />
+        
+<activity
+        android:name="com.ls.sip.ImageCropActivity"
         android:screenOrientation="portrait"
         android:theme="@style/Sip.Theme" />
 ```
