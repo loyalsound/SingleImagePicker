@@ -231,10 +231,8 @@ public class CameraFragment extends Fragment {
             }
         });
 
-//        changeMenuIconAnimation((FloatingActionMenu) v.findViewById(R.id.cwac_cam2_settings));
-
-        onHiddenChanged(false); // hack, since this does not get
-        // called on initial display
+        // hack, since this does not get called on initial display
+        onHiddenChanged(false);
 
         btnTakePicture.setEnabled(false);
         btnSwitch.setEnabled(false);
