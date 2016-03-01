@@ -533,7 +533,8 @@ public class ImagePickerActivity extends AppCompatActivity implements OnPageChan
                 case 0:
                     return new GalleryFragment();
                 case 1:
-                    CameraFragment cameraFragment = CameraFragment.newPictureInstance(getOutputUri(), getIntent().getBooleanExtra(EXTRA_UPDATE_MEDIA_STORE, false));
+                    CameraFragment cameraFragment = CameraFragment.newPictureInstance(
+                            getIntermediateUri(), getIntent().getBooleanExtra(EXTRA_UPDATE_MEDIA_STORE, false));
                     if (mAlreadyHasRequiredPermissions) {
                         initCamera(cameraFragment);
                     }
